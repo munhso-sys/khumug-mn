@@ -145,12 +145,12 @@ export default function KhumugHomepage() {
       </header>
 
       <section
-        className="relative min-h-screen overflow-hidden bg-[#121412] bg-cover bg-center bg-no-repeat pt-28 text-white"
+        className="relative min-h-screen overflow-hidden bg-[#121412] bg-cover bg-center bg-fixed bg-no-repeat pt-28 text-white"
         style={{ backgroundImage: "url('/mine-bg.jpg')" }}
       >
-      <div className="absolute inset-0 bg-black/55" />
+      <div className="absolute inset-0 bg-black/25" />
       <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/55 to-[#1d3b12]/45" />
-      <div className="absolute inset-0 animate-pulse bg-[#5FAF2D]/5 mix-blend-overlay" />
+      <div className="absolute inset-0 bg-black/40" />
       
         <div className="absolute inset-0 opacity-20" style={{ backgroundImage: "linear-gradient(90deg, rgba(255,255,255,.08) 1px, transparent 1px), linear-gradient(rgba(255,255,255,.08) 1px, transparent 1px)", backgroundSize: "42px 42px" }} />
         <div className="absolute -right-28 top-16 h-[500px] w-[500px] rounded-full bg-[#5FAF2D]/15 blur-3xl" />
@@ -183,7 +183,7 @@ export default function KhumugHomepage() {
                     className="mb-4 h-16 w-auto"
                   />
                   <div className="text-sm text-white/60">Design concept</div>
-                  <div className="mt-2 text-2xl font-black md:text-3xl">Modern Industrial Corporate</div>
+                  <div className="mt-2 text-2xl font-black md:text-2xl">Орчин үеийн аж үйлдвэрийн корпораци</div>
                 </div>
               </div>
               <div className="grid grid-cols-2 gap-3">
