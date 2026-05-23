@@ -55,8 +55,51 @@ const navItems = [
   ["Түншүүд", "#partners"],
 ];
 
+
 export default function KhumugHomepage() {
   const [menuOpen, setMenuOpen] = useState(false);
+
+  const [formStatus, setFormStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
+  const [formMessage, setFormMessage] = useState("");
+
+  async function handleContactSubmit(event: React.FormEvent<HTMLFormElement>) {
+  event.preventDefault();
+
+  console.log("FORM SUBMIT CLICKED");
+
+  setFormStatus("loading");
+  setFormMessage("");
+
+  const formData = new FormData(event.currentTarget);
+
+  const payload = {
+    name: formData.get("name"),
+    phone: formData.get("phone"),
+    email: formData.get("email"),
+    service: formData.get("service"),
+    message: formData.get("message"),
+  };
+
+  const response = await fetch("/api/contact", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(payload),
+  });
+
+  if (response.ok) {
+    setFormStatus("success");
+    setFormMessage("Таны хүсэлт амжилттай илгээгдлээ.");
+    event.currentTarget.reset();
+  } else {
+    const result = await response.json().catch(() => null);
+    console.error("CONTACT ERROR:", result);
+
+    setFormStatus("error");
+    setFormMessage("Илгээх үед алдаа гарлаа. Дахин оролдоно уу.");
+  }
+}
 
   return (
     <div className="min-h-screen bg-[#F3F4F6] text-[#1F1F1F]">
@@ -105,8 +148,8 @@ export default function KhumugHomepage() {
         className="relative min-h-screen overflow-hidden bg-[#121412] bg-cover bg-center bg-no-repeat pt-28 text-white"
         style={{ backgroundImage: "url('/mine-bg.jpg')" }}
       >
-      <div className="absolute inset-0 bg-black/75" />
-      <div className="absolute inset-0 bg-gradient-to-r from-black via-black/80 to-[#1d3b12]/70" />
+      <div className="absolute inset-0 bg-black/55" />
+      <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/55 to-[#1d3b12]/45" />
       <div className="absolute inset-0 animate-pulse bg-[#5FAF2D]/5 mix-blend-overlay" />
       
         <div className="absolute inset-0 opacity-20" style={{ backgroundImage: "linear-gradient(90deg, rgba(255,255,255,.08) 1px, transparent 1px), linear-gradient(rgba(255,255,255,.08) 1px, transparent 1px)", backgroundSize: "42px 42px" }} />
@@ -238,23 +281,68 @@ export default function KhumugHomepage() {
             </div>
           </div>
 
-          <form className="rounded-[2rem] border border-white/10 bg-white/5 p-6 shadow-2xl">
+          <form
+            onSubmit={handleContactSubmit}
+            className="rounded-[2rem] border border-white/10 bg-white/5 p-6 shadow-2xl"
+          >
             <div className="grid gap-4 md:grid-cols-2">
-              <input className="rounded-2xl border border-white/10 bg-black/20 px-4 py-3 text-white outline-none placeholder:text-white/35 focus:border-[#5FAF2D]" placeholder="Нэр" />
-              <input className="rounded-2xl border border-white/10 bg-black/20 px-4 py-3 text-white outline-none placeholder:text-white/35 focus:border-[#5FAF2D]" placeholder="Утас" />
+              <input
+                name="name"
+                required
+                className="rounded-2xl border border-white/10 bg-black/20 px-4 py-3 text-white outline-none placeholder:text-white/35 focus:border-[#5FAF2D]"
+                placeholder="Нэр"
+              />
+              <input
+                name="phone"
+                required
+                className="rounded-2xl border border-white/10 bg-black/20 px-4 py-3 text-white outline-none placeholder:text-white/35 focus:border-[#5FAF2D]"
+                placeholder="Утас"
+              />
             </div>
-            <input className="mt-4 w-full rounded-2xl border border-white/10 bg-black/20 px-4 py-3 text-white outline-none placeholder:text-white/35 focus:border-[#5FAF2D]" placeholder="И-мэйл" />
-            <select className="mt-4 w-full rounded-2xl border border-white/10 bg-black/20 px-4 py-3 text-white outline-none focus:border-[#5FAF2D]">
+
+            <input
+              name="email"
+              type="email"
+              className="mt-4 w-full rounded-2xl border border-white/10 bg-black/20 px-4 py-3 text-white outline-none placeholder:text-white/35 focus:border-[#5FAF2D]"
+              placeholder="И-мэйл"
+            />
+
+            <select
+              name="service"
+              className="mt-4 w-full rounded-2xl border border-white/10 bg-black/20 px-4 py-3 text-white outline-none focus:border-[#5FAF2D]"
+            >
               <option className="text-black">Үйлчилгээний төрөл сонгох</option>
               <option className="text-black">Хүнд машин механизмын засвар</option>
               <option className="text-black">Уурхайн олборлолт</option>
               <option className="text-black">Core Skills сургалт</option>
               <option className="text-black">ХАБЭА, эрсдэлийн үнэлгээ</option>
             </select>
-            <textarea className="mt-4 min-h-36 w-full rounded-2xl border border-white/10 bg-black/20 px-4 py-3 text-white outline-none placeholder:text-white/35 focus:border-[#5FAF2D]" placeholder="Зурвас" />
-            <button type="button" className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-[#5FAF2D] px-6 py-4 font-bold text-white hover:scale-105 hover:bg-[#3E7A1B] md:w-auto">
-              Илгээх <Send className="h-4 w-4" />
+
+            <textarea
+              name="message"
+              required
+              className="mt-4 min-h-36 w-full rounded-2xl border border-white/10 bg-black/20 px-4 py-3 text-white outline-none placeholder:text-white/35 focus:border-[#5FAF2D]"
+              placeholder="Зурвас"
+            />
+
+            <button
+              type="submit"
+              disabled={formStatus === "loading"}
+              className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-[#5FAF2D] px-6 py-4 font-bold text-white hover:bg-[#3E7A1B] md:w-auto"
+            >
+              {formStatus === "loading" ? "Илгээж байна..." : "Илгээх"}
+              <Send className="h-4 w-4" />
             </button>
+
+            {formMessage && (
+              <p
+                className={`mt-4 text-sm ${
+                  formStatus === "success" ? "text-[#B9F59C]" : "text-red-300"
+                }`}
+              >
+                {formMessage}
+              </p>
+            )}
           </form>
         </div>
       </section>
