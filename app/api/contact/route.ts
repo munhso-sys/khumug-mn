@@ -1,9 +1,15 @@
 import { Resend } from "resend";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
-
 export async function POST(request: Request) {
   try {
+    if (!process.env.RESEND_API_KEY) {
+      return Response.json(
+        { error: "RESEND_API_KEY тохируулаагүй байна." },
+        { status: 500 }
+      );
+    }
+
+    const resend = new Resend(process.env.RESEND_API_KEY);
     const body = await request.json();
 
     const name = String(body.name || "").trim();
@@ -23,26 +29,17 @@ export async function POST(request: Request) {
       from:
         process.env.CONTACT_FROM_EMAIL ||
         "Khumug Mining <onboarding@resend.dev>",
-
       to: [process.env.CONTACT_TO_EMAIL || "info@khumug.mn"],
-
       replyTo: email || undefined,
-
-      subject: `Шинэ хүсэлт: ${service || "Website Contact Form"}`,
-
+      subject: `khumug.mn - Шинэ хүсэлт: ${name}`,
       html: `
-        <div>
-          <h2>Шинэ хүсэлт</h2>
-
-          <p><strong>Нэр:</strong> ${name}</p>
-          <p><strong>Утас:</strong> ${phone}</p>
-          <p><strong>Имэйл:</strong> ${email}</p>
-          <p><strong>Үйлчилгээ:</strong> ${service}</p>
-
-          <hr />
-
-          <p>${message.replace(/\n/g, "<br />")}</p>
-        </div>
+        <h2>khumug.mn сайтаас шинэ хүсэлт ирлээ</h2>
+        <p><strong>Нэр:</strong> ${name}</p>
+        <p><strong>Утас:</strong> ${phone}</p>
+        <p><strong>И-мэйл:</strong> ${email || "Оруулаагүй"}</p>
+        <p><strong>Үйлчилгээ:</strong> ${service || "Сонгоогүй"}</p>
+        <p><strong>Зурвас:</strong></p>
+        <p>${message.replace(/\n/g, "<br />")}</p>
       `,
     });
 
@@ -51,7 +48,7 @@ export async function POST(request: Request) {
     }
 
     return Response.json({ success: true, data });
-  } catch (err) {
+  } catch {
     return Response.json(
       { error: "Илгээх үед алдаа гарлаа." },
       { status: 500 }
