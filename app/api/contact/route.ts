@@ -58,6 +58,24 @@ console.log("TO:", process.env.CONTACT_TO_EMAIL);
       );
     }
 
+    await resend.emails.send({
+      from: process.env.CONTACT_FROM_EMAIL || "Khumug Mining <info@khumug.mn>",
+      to: [email],
+      subject: "Таны хүсэлтийг хүлээн авлаа",
+      html: `
+        <h2>Таны хүсэлтийг хүлээн авлаа</h2>
+        <p>Сайн байна уу, ${name}.</p>
+        <p>Хөмөг Майнинг ХХК-д хандсанд баярлалаа.</p>
+        <p>Бид таны илгээсэн хүсэлтийг хүлээн авлаа. Манай баг удахгүй тантай холбогдох болно.</p>
+        <br />
+        <p><strong>Таны илгээсэн мэдээлэл:</strong></p>
+        <p>Үйлчилгээ: ${service || "Сонгоогүй"}</p>
+        <p>Утас: ${phone}</p>
+        <p>Зурвас: ${message}</p>
+        <br />
+        <p>Хүндэтгэсэн,<br />Хөмөг Майнинг ХХК</p>
+      `,
+    });
     return Response.json({ success: true, data });
   } catch (error) {
     console.error("CONTACT API ERROR:", error);
