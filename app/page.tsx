@@ -69,8 +69,10 @@ export default function KhumugHomepage() {
 
   setFormStatus("loading");
   setFormMessage("");
+  
+  const form = event.currentTarget;
 
-  const formData = new FormData(event.currentTarget);
+  const formData = new FormData(form);
 
   const payload = {
     name: formData.get("name"),
@@ -91,7 +93,7 @@ export default function KhumugHomepage() {
   if (response.ok) {
     setFormStatus("success");
     setFormMessage("Таны хүсэлт амжилттай илгээгдлээ.");
-    event.currentTarget.reset();
+    form.reset();
   } else {
     const result = await response.json().catch(() => null);
     console.error("CONTACT ERROR:", result);

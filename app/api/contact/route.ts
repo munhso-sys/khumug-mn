@@ -9,6 +9,10 @@ export async function POST(request: Request) {
       );
     }
 
+console.log("API KEY:", process.env.RESEND_API_KEY);
+console.log("FROM:", process.env.CONTACT_FROM_EMAIL);
+console.log("TO:", process.env.CONTACT_TO_EMAIL);
+
     const resend = new Resend(process.env.RESEND_API_KEY);
     const body = await request.json();
 
@@ -28,7 +32,7 @@ export async function POST(request: Request) {
     const { data, error } = await resend.emails.send({
       from:
         process.env.CONTACT_FROM_EMAIL ||
-        "Khumug Mining <info@khumug.mn",
+        "Khumug Mining <info@khumug.mn>",
       to: [process.env.CONTACT_TO_EMAIL || "info@khumug.mn"],
       replyTo: email || undefined,
       subject: `khumug.mn - Шинэ хүсэлт: ${name}`,
@@ -44,13 +48,27 @@ export async function POST(request: Request) {
     });
 
     if (error) {
-      return Response.json({ error }, { status: 500 });
+      console.error("RESEND ERROR:", JSON.stringify(error, null, 2));
+
+      return Response.json(
+        {
+          error: JSON.stringify(error),
+        },
+        { status: 500 }
+      );
     }
 
     return Response.json({ success: true, data });
-  } catch {
+  } catch (error) {
+    console.error("CONTACT API ERROR:", error);
+
     return Response.json(
-      { error: "Илгээх үед алдаа гарлаа." },
+      {
+        error:
+          error instanceof Error
+            ? error.message
+            : JSON.stringify(error),
+      },
       { status: 500 }
     );
   }
