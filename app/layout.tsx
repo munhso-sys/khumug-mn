@@ -31,3 +31,16 @@ export default function RootLayout({
     </html>
   );
 }
+export const metadata = {
+  title: "Хөмөг Майнинг ХХК | Mining • Maintenance • Training",
+  description:
+    "Уул уурхайн хүнд техник, олборлолт, ХАБЭА, сургалтын цогц үйлчилгээ.",
+  keywords: [
+    "уул уурхайн сургалт",
+    "хүнд машин механизм",
+    "ХАБЭА",
+    "mining training mongolia",
+    "mining maintenance",
+    "уул уурхайн зөвлөгөө",
+  ],
+};
