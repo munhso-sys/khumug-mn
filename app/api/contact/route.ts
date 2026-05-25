@@ -28,7 +28,7 @@ export async function POST(request: Request) {
     const { data, error } = await resend.emails.send({
       from:
         process.env.CONTACT_FROM_EMAIL ||
-        "Khumug Mining <info@khumug.mn>",
+        "Khumug Mining <onboarding@resend.dev",
       to: [process.env.CONTACT_TO_EMAIL || "info@khumug.mn"],
       replyTo: email || undefined,
       subject: `khumug.mn - Шинэ хүсэлт: ${name}`,
